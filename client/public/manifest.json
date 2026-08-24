@@ -1,0 +1,10 @@
+{
+  "name": "XV Allison Control QR",
+  "short_name": "XV Allison",
+  "description": "Control de invitados y acceso por codigo QR para XV Allison",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#a2d2ff",
+  "theme_color": "#0f2d5e",
+  "icons": []
+}
