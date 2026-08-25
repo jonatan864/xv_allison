@@ -1,5 +1,5 @@
 import { Camera, CheckCircle2, ShieldAlert, XCircle } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { validarQr } from '../services/invitadosService.js';
 
 const resultIcons = {

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TicketPreview } from '../components/TicketPreview.jsx';
 
 export function Tickets({ invitados }) {

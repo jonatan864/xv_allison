@@ -1,3 +1,4 @@
+import React from 'react';
 import { Save, UserPlus, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

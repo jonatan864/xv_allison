@@ -1,3 +1,4 @@
+import React from 'react';
 import { Edit3, Search, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { formatDateTime } from '../utils/date.js';

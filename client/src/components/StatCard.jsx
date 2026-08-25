@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function StatCard({ label, value, tone = 'blue' }) {
   return (
     <section className={`stat-card ${tone}`}>

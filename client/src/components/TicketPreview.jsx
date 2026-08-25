@@ -1,3 +1,4 @@
+import React from 'react';
 import { Download, MessageCircle } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { useEffect, useRef, useState } from 'react';
