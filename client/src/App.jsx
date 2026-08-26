@@ -9,6 +9,7 @@ import { Scanner } from './pages/Scanner.jsx';
 import { Tickets } from './pages/Tickets.jsx';
 import { disconnectSocket } from './services/socket.js';
 
+
 export function App() {
   const auth = useAuth();
   const [activePage, setActivePage] = useState('dashboard');
