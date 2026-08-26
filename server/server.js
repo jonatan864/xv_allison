@@ -17,17 +17,26 @@ assertProductionEnv();
 
 const app = express();
 const server = http.createServer(app);
+
+const isAllowedOrigin = (origin) => !origin || env.corsOrigins.includes(origin);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) return callback(null, true);
+    return callback(new Error('Origen no permitido por CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+};
+
 const io = new Server(server, {
-  cors: {
-    origin: env.corsOrigin,
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
-  }
+  cors: corsOptions
 });
 
 initSocket(io);
 
 app.use(helmet());
-app.use(cors({ origin: env.corsOrigin }));
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use(
@@ -52,7 +61,7 @@ async function start() {
   await connectDb();
   await seedInitialUsers();
 
-  server.listen(env.port, () => {
+  server.listen(env.port, '0.0.0.0', () => {
     console.log(`API XV Allison escuchando en puerto ${env.port}`);
   });
 }
