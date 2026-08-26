@@ -15,8 +15,6 @@ export function QRScanner({ onScan, disabled = false }) {
   }, [onScan]);
 
   useEffect(() => {
-    // El efecto se ejecuta después de que React haya montado el DOM.
-    // Si está deshabilitado, no creamos la instancia del scanner.
     if (disabled) {
       return undefined;
     }
@@ -36,13 +34,9 @@ export function QRScanner({ onScan, disabled = false }) {
     scanningRef.current = false;
 
     const handleScan = (decodedText) => {
-      if (cancelled || !decodedText) {
-        return;
-      }
+      if (cancelled || !decodedText) return;
 
-      if (lastScanRef.current === decodedText) {
-        return;
-      }
+      if (lastScanRef.current === decodedText) return;
 
       lastScanRef.current = decodedText;
       onScanRef.current?.(decodedText);
@@ -67,20 +61,13 @@ export function QRScanner({ onScan, disabled = false }) {
 
         await startPromise;
 
-        if (cancelled) {
-          // El componente pudo desmontarse mientras start() estaba pendiente.
-          // La limpieza esperará esta promesa y detendrá el scanner de forma segura.
-          return;
+        if (!cancelled) {
+          scanningRef.current = true;
         }
-
-        scanningRef.current = true;
       } catch (error) {
-        // Si React desmontó el componente mientras start() estaba pendiente,
-        // no mostramos el error como un fallo de la interfaz.
         if (!cancelled) {
           console.error('Error al iniciar la cámara:', error);
         }
-
         scanningRef.current = false;
       }
     };
@@ -91,19 +78,15 @@ export function QRScanner({ onScan, disabled = false }) {
       cancelled = true;
 
       const cleanup = async () => {
-        // Importante: esperar a que start() termine antes de consultar el estado
-        // o llamar a stop(). Esto evita "Cannot stop, scanner is not running or paused".
         if (startPromise) {
           try {
             await startPromise;
           } catch {
-            // Si start() falló, no hay nada que detener.
+            // La inicialización falló; no hay nada que detener.
           }
         }
 
-        if (scannerRef.current !== scanner) {
-          return;
-        }
+        if (scannerRef.current !== scanner) return;
 
         try {
           const state = scanner.getState();
@@ -115,11 +98,9 @@ export function QRScanner({ onScan, disabled = false }) {
             await scanner.stop();
           }
         } catch (error) {
-          // La limpieza nunca debe provocar que React desmonte la interfaz.
           console.warn('No fue posible detener el escáner:', error);
         } finally {
           try {
-            // clear() solo se ejecuta después de que stop() haya terminado.
             await scanner.clear();
           } catch (error) {
             console.warn('No fue posible limpiar el escáner:', error);
@@ -139,7 +120,127 @@ export function QRScanner({ onScan, disabled = false }) {
 
   return (
     <div className="qr-scanner-container">
-      <div id="qr-reader"></div>
+      <style>{`
+        .qr-scanner-container {
+          position: relative;
+          width: 100%;
+          max-width: 400px;
+          aspect-ratio: 4 / 3;
+          margin: 0 auto;
+          overflow: hidden;
+          border-radius: 12px;
+          background: #000;
+          isolation: isolate;
+        }
+
+        .qr-scanner-container #qr-reader {
+          position: absolute;
+          inset: 0;
+          width: 100% !important;
+          height: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+          overflow: hidden !important;
+          background: #000;
+        }
+
+        .qr-scanner-container #qr-reader > div {
+          width: 100% !important;
+          height: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+        }
+
+        .qr-scanner-container #qr-reader video,
+        .qr-scanner-container video {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          min-width: 100% !important;
+          min-height: 100% !important;
+          max-width: none !important;
+          max-height: none !important;
+          object-fit: cover !important;
+          display: block !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+        }
+
+        .qr-scanner-container #qr-reader canvas,
+        .qr-scanner-container #qr-reader img {
+          display: none !important;
+        }
+
+        .qr-scanner-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 20;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .qr-scanner-overlay .qr-frame {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: min(250px, 70%);
+          aspect-ratio: 1 / 1;
+          transform: translate(-50%, -50%);
+          border: 2px solid rgba(255, 255, 255, 0.95);
+          border-radius: 14px;
+          z-index: 21;
+          box-sizing: border-box;
+        }
+
+        .qr-scanner-overlay .corner {
+          position: absolute;
+          width: 28px;
+          height: 28px;
+          border-color: #fff;
+          border-style: solid;
+          border-width: 0;
+        }
+
+        .qr-scanner-overlay .corner.top-left {
+          top: -2px;
+          left: -2px;
+          border-top-width: 4px;
+          border-left-width: 4px;
+          border-top-left-radius: 12px;
+        }
+
+        .qr-scanner-overlay .corner.top-right {
+          top: -2px;
+          right: -2px;
+          border-top-width: 4px;
+          border-right-width: 4px;
+          border-top-right-radius: 12px;
+        }
+
+        .qr-scanner-overlay .corner.bottom-left {
+          bottom: -2px;
+          left: -2px;
+          border-bottom-width: 4px;
+          border-left-width: 4px;
+          border-bottom-left-radius: 12px;
+        }
+
+        .qr-scanner-overlay .corner.bottom-right {
+          right: -2px;
+          bottom: -2px;
+          border-bottom-width: 4px;
+          border-right-width: 4px;
+          border-bottom-right-radius: 12px;
+        }
+      `}</style>
+
+      <div id="qr-reader" aria-label="Visor de cámara para escanear códigos QR"></div>
 
       <div className="qr-scanner-overlay">
         <div className="qr-frame">
