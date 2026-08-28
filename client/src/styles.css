@@ -1080,6 +1080,96 @@ td small {
   border: 1px solid #fecaca;
 }
 
+.scan-result {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 2px solid transparent;
+}
+
+.scan-result-content {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.scan-result-content strong {
+  font-size: 1.05rem;
+}
+
+.scan-guest-name {
+  font-weight: 800;
+  color: #0f2d5e;
+}
+
+.scan-progress {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.scan-result-success,
+.scan-result.acceso_permitido {
+  color: #065f46;
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.scan-result-success svg,
+.scan-result.acceso_permitido svg {
+  color: #059669;
+}
+
+.scan-result-expired,
+.scan-result.qr_caducado {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.scan-result-expired svg,
+.scan-result.qr_caducado svg {
+  color: #d97706;
+}
+
+.scan-result.qr_no_valido {
+  color: #991b1b;
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.scan-result.qr_no_valido svg {
+  color: #dc2626;
+}
+
+.history-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #f8fbff;
+}
+
+.history-item small {
+  font-weight: 800;
+}
+
+.history-item.acceso_permitido {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.history-item.qr_caducado {
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
+
+.history-item.qr_no_valido {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
 /* =========================================
    HISTORIAL
    ========================================= */

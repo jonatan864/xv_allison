@@ -9,18 +9,29 @@ const invitadoSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 120
     },
+
     telefono: {
       type: String,
       trim: true,
       maxlength: 30,
       default: ''
     },
+
     pases: {
       type: Number,
       required: true,
       min: 1,
       max: 20
     },
+
+    // Número de accesos que ya han sido utilizados.
+    accesosUsados: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0
+    },
+
     qrToken: {
       type: String,
       required: true,
@@ -28,16 +39,20 @@ const invitadoSchema = new mongoose.Schema(
       immutable: true,
       index: true
     },
+
     estado: {
       type: String,
-      enum: ['VIGENTE', 'USADO', 'CANCELADO'],
+      enum: ['VIGENTE', 'CADUCADO', 'CANCELADO'],
       default: 'VIGENTE',
       index: true
     },
+
     fechaRegistro: {
       type: Date,
       default: Date.now
     },
+
+    // Conservamos este campo para registrar la última entrada.
     fechaEntrada: {
       type: Date,
       default: null

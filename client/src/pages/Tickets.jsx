@@ -21,7 +21,7 @@ export function Tickets({ invitados }) {
               onClick={() => setSelectedId(invitado._id)}
             >
               <strong>{invitado.nombre}</strong>
-              <span>{invitado.pases} pases • {invitado.estado}</span>
+              <span>{invitado.pases} accesos • {invitado.estado}</span>
             </button>
           ))}
           {invitados.length === 0 && <p className="muted">Aun no hay invitados registrados</p>}
