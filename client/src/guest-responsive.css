@@ -1,0 +1,258 @@
+/* =========================================================
+   XV ALLISON - GUEST LIST + MOBILE NAVIGATION
+   Overrides specificos para pantallas pequenas.
+   ========================================================= */
+
+/* Navigation: never allow the nav itself to create page overflow. */
+.tabs {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs-scroll {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  gap: 0.5rem;
+}
+
+.tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Guest list header */
+.guest-list-header {
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.guest-list-heading {
+  min-width: 0;
+  flex: 1 1 180px;
+}
+
+.guest-search {
+  min-width: 0;
+  width: min(360px, 100%);
+  max-width: 100%;
+  flex: 1 1 280px;
+}
+
+.guest-search input {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Desktop/tablet keep the original table. */
+.guest-mobile-list {
+  display: none;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+@media (max-width: 599px) {
+  .tabs {
+    padding: 0.55rem 0.75rem;
+  }
+
+  .tabs-scroll {
+    min-width: max-content;
+  }
+
+  .tab {
+    min-height: 42px;
+    padding-inline: 0.85rem;
+  }
+
+  .guest-list-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .guest-search {
+    width: 100%;
+    flex: none;
+  }
+
+  /* Cards are used instead of forcing a 760px table into a phone. */
+  .guest-mobile-list {
+    display: grid;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .guest-table-wrap {
+    display: none;
+  }
+
+  .guest-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(162, 210, 255, 0.8);
+    border-radius: 16px;
+    padding: 0.9rem;
+    background: #f8fbff;
+  }
+
+  .guest-card-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.7rem;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .guest-card-identity {
+    min-width: 0;
+    flex: 1 1 180px;
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .guest-card-identity strong {
+    color: #0f2d5e;
+    font-size: 1rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .guest-card-identity span,
+  .guest-card-identity small {
+    min-width: 0;
+    color: #64748b;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .guest-card-identity small {
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .guest-card-main .status {
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+
+  .guest-card-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #dbeafe;
+  }
+
+  .guest-card-meta > div {
+    min-width: 0;
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .guest-card-meta span {
+    color: #64748b;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .guest-card-meta strong {
+    color: #0f2d5e;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .guest-card-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.85rem;
+  }
+
+  .guest-card-actions button {
+    min-width: 0;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    color: #0f2d5e;
+    background: #ffffff;
+    font-weight: 800;
+  }
+
+  .guest-card-actions button span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .tab {
+    padding-inline: 0.75rem;
+  }
+
+  .guest-card {
+    padding: 0.8rem;
+  }
+
+  .guest-card-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .guest-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet: the table remains available, but the heading/search stack safely. */
+@media (min-width: 600px) and (max-width: 899px) {
+  .guest-list-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
+  }
+
+  .guest-search {
+    width: 100%;
+  }
+}
+
+/* Desktop: navigation can use its full width without forcing a horizontal scroll. */
+@media (min-width: 900px) {
+  .tabs {
+    overflow-x: visible;
+  }
+
+  .tabs-scroll {
+    width: auto;
+    min-width: 0;
+  }
+}
