@@ -90,34 +90,35 @@ export function TicketPreview({ invitado }) {
       <article className="ticket-card" ref={ticketRef}>
         <div className="ticket-ribbon" />
         <div className="ticket-head">
-          <p>XV ANOS • MARIPOSAS AZULES</p>
-          <h2>MIS XV ANOS</h2>
-          <h1>ALLISON</h1>
+          <p>XV AÑOS • MARIPOSAS AZULES</p>
+          <h2>MIS XV AÑOS</h2>
+          <h1>ALISON</h1>
         </div>
 
         <div className="ticket-guest">
-          <span>INVITACION PARA</span>
+          <span>INVITACION PARA:</span>
           <strong>{invitado.nombre}</strong>
-          <b>{invitado.pases} {invitado.pases === 1 ? 'PASE' : 'PASES'}</b>
+          <span>VALIDO POR:</span>
+          <b>{invitado.pases} {invitado.pases === 1 ? 'PASE' : 'ACCESOS'}</b>
         </div>
 
         <div className="ticket-details">
           <div>
             <span>MISA</span>
             <strong>4:00 PM</strong>
-            <p>Iglesia del Senor de las Angustias</p>
+            <p>Iglesia del Señor de las Angustias</p>
           </div>
           <div>
-            <span>FIESTA</span>
+            <span>RECEPCIÓN EN SALÓN</span>
             <strong>5:00 PM</strong>
-            <p>Salon La Palapa del Puas</p>
+            <p>Salón La Palapa del Puas</p>
           </div>
         </div>
 
         <div className="qr-box">{qrUrl && <img src={qrUrl} alt={`QR ${invitado.nombre}`} />}</div>
         <code>{invitado.qrToken}</code>
-        <p className="ticket-note">Valido solo el 19 Sept 2026 - Un solo ingreso</p>
-        <div className="ticket-foot">DISENADO CON AMOR • XV ALLISON</div>
+        <p className="ticket-note">Válido solo el 19 Sept 2026</p>
+        <div className="ticket-foot">DISEÑADO CON AMOR • XV ALISON</div>
       </article>
 
       <div className="ticket-actions">

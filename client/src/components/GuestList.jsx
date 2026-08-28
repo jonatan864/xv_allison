@@ -41,7 +41,7 @@ export function GuestList({ invitados, onEdit, onDelete }) {
           <thead>
             <tr>
               <th>Invitado / QR</th>
-              <th>Pases</th>
+              <th>Accesos</th>
               <th>Estado</th>
               <th>Registro</th>
               <th>Acciones</th>

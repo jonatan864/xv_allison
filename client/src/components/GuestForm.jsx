@@ -80,7 +80,7 @@ export function GuestForm({ selected, onSave, onCancel }) {
           </label>
 
           <label>
-            Pases
+            Accesos
             <select value={form.pases} onChange={(event) => updateField('pases', event.target.value)}>
               {[1, 2, 3, 4, 5, 6, 7, 8].map((value) => (
                 <option key={value} value={value}>
