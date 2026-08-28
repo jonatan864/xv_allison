@@ -1,0 +1,425 @@
+/* =========================================================
+   XV ALLISON - RESPONSIVE / MOBILE-FIRST OVERRIDES
+   Se carga despues de styles.css para corregir overflow
+   sin alterar la identidad visual existente.
+   ========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* ---------- Header ---------- */
+.topbar {
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+}
+
+.brand {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand h1,
+.brand .eyebrow {
+  overflow-wrap: anywhere;
+}
+
+.user-chip {
+  flex: 0 1 auto;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+/* ---------- Navigation ---------- */
+.tabs {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  padding: 0.65rem 1rem;
+}
+
+.tabs-scroll {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  gap: 0.5rem;
+}
+
+.tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* ---------- Main content ---------- */
+.content {
+  width: calc(100% - 1rem);
+  max-width: 1220px;
+  min-width: 0;
+  margin-inline: auto;
+  padding: 0.75rem 0 1.5rem;
+}
+
+.page-stack,
+.guests-grid,
+.tickets-grid,
+.scanner-grid,
+.stats-grid {
+  width: 100%;
+  min-width: 0;
+}
+
+.panel,
+.hero-panel,
+.stat-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.panel {
+  padding: 1rem;
+}
+
+/* ---------- Panel headings ---------- */
+.panel-title,
+.list-header {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.panel-title > div,
+.list-header > div {
+  min-width: 0;
+}
+
+.panel-title h2,
+.panel-title p,
+.list-header h2,
+.list-header p {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Forms ---------- */
+.guest-form,
+.login-form,
+.manual-scan {
+  width: 100%;
+  min-width: 0;
+}
+
+.form-grid {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(80px, 110px);
+}
+
+label {
+  min-width: 0;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.form-actions {
+  width: 100%;
+  min-width: 0;
+}
+
+.form-actions button {
+  max-width: 100%;
+}
+
+/* ---------- Search ---------- */
+.list-header .search-box {
+  width: min(360px, 100%);
+  max-width: 100%;
+}
+
+.search-box input {
+  min-width: 0;
+  width: 100%;
+}
+
+/* ---------- Tables: scroll only the table, never the page ---------- */
+.table-wrap {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  min-width: 760px;
+}
+
+/* ---------- Scanner / camera ---------- */
+.camera-container,
+.scanner-panel,
+.history-panel {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Evita que un video de la camara fuerce el viewport. */
+.camera-container video,
+.camera-container canvas {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ---------- Tickets ---------- */
+.ticket-area,
+.ticket-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.ticket-card {
+  overflow: hidden;
+}
+
+.ticket-card code {
+  display: block;
+  max-width: 100%;
+  padding-inline: 1rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ticket-actions {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.ticket-actions button {
+  flex: 1 1 180px;
+  max-width: 100%;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+@media (min-width: 600px) {
+  .topbar {
+    padding: 0.9rem 1.25rem;
+  }
+
+  .content {
+    width: calc(100% - 2rem);
+  }
+
+  .panel {
+    padding: 1.2rem;
+  }
+}
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+@media (min-width: 900px) {
+  .topbar {
+    flex-wrap: nowrap;
+    padding: 1rem clamp(1rem, 4vw, 2rem);
+  }
+
+  .brand {
+    flex: 0 1 auto;
+  }
+
+  .tabs {
+    overflow-x: visible;
+  }
+
+  .tabs-scroll {
+    width: auto;
+    min-width: 0;
+  }
+
+  .content {
+    width: min(1220px, calc(100% - 2rem));
+  }
+}
+
+/* =========================================================
+   TELEFONOS PEQUENOS
+   ========================================================= */
+@media (max-width: 480px) {
+  .topbar {
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.75rem;
+  }
+
+  .brand {
+    flex-basis: 100%;
+  }
+
+  .brand-mark {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .brand h1 {
+    font-size: 1.1rem;
+  }
+
+  .eyebrow {
+    font-size: 0.62rem;
+  }
+
+  .user-chip {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .tabs {
+    padding-inline: 0.75rem;
+  }
+
+  .content {
+    width: calc(100% - 1rem);
+    padding-top: 0.5rem;
+  }
+
+  .panel {
+    padding: 0.9rem;
+    border-radius: 18px;
+  }
+
+  .hero-panel {
+    padding: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button,
+  .guest-form .primary-button,
+  .manual-scan .primary-button {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .stat-card {
+    padding: 0.85rem;
+  }
+
+  .stat-card strong {
+    font-size: 1.8rem;
+  }
+
+  .panel-title {
+    align-items: flex-start;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .ticket-head {
+    padding: 1.3rem 0.9rem 0.8rem;
+  }
+
+  .ticket-guest,
+  .ticket-details {
+    max-width: 100%;
+  }
+
+  .ticket-actions {
+    flex-direction: column;
+  }
+
+  .ticket-actions button {
+    width: 100%;
+    flex-basis: auto;
+  }
+}
+
+/* Extra narrow phones: keep header usable without horizontal overflow. */
+@media (max-width: 360px) {
+  .brand-copy h1 {
+    font-size: 1rem;
+  }
+
+  .user-chip {
+    font-size: 0.72rem;
+  }
+
+  .tab {
+    min-height: 42px;
+    padding-inline: 0.8rem;
+  }
+
+  .content {
+    width: calc(100% - 0.75rem);
+  }
+}
