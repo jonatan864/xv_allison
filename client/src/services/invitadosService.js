@@ -27,9 +27,19 @@ export async function deleteInvitado(id) {
   });
 }
 
-export async function validarQr(qrToken) {
-  return apiRequest('/invitados/validar-qr', {
+export async function consultarQr(qrToken) {
+  return apiRequest('/invitados/consultar-qr', {
     method: 'POST',
     body: JSON.stringify({ qrToken })
+  });
+}
+
+export async function validarQr(qrToken, cantidad = 1) {
+  return apiRequest('/invitados/validar-qr', {
+    method: 'POST',
+    body: JSON.stringify({
+      qrToken,
+      cantidad
+    })
   });
 }
