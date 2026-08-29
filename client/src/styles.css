@@ -20,7 +20,6 @@ body {
     linear-gradient(180deg, #a2d2ff 0%, #d7ecff 48%, #f8fbff 100%);
 }
 
-
 button,
 input,
 select {
@@ -37,114 +36,6 @@ button {
   display: grid;
   place-items: center;
   padding: 1rem;
-}
-
-.login-panel {
-  width: min(430px, 100%);
-  padding: 2rem;
-  border: 3px solid #d4af37;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 24px 70px rgba(15, 45, 94, 0.25);
-  text-align: center;
-}
-
-.login-mark,
-.brand-mark {
-  display: grid;
-  place-items: center;
-  color: #d4af37;
-  background: #0f2d5e;
-}
-
-.login-mark {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1rem;
-  border-radius: 18px;
-}
-
-.login-panel h1,
-.brand h1,
-.hero-panel h2 {
-  margin: 0;
-  color: #0f2d5e;
-}
-
-.eyebrow {
-  margin: 0;
-  color: #7a5a00;
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.login-form,
-.guest-form,
-.manual-scan {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-label {
-  display: grid;
-  gap: 0.45rem;
-  color: #0f2d5e;
-  font-size: 0.75rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-input,
-select {
-  width: 100%;
-  min-height: 48px;
-  border: 2px solid rgba(162, 210, 255, 0.8);
-  border-radius: 14px;
-  padding: 0 1rem;
-  color: #0f172a;
-  background: #f8fbff;
-  outline: none;
-}
-
-input:focus,
-select:focus {
-  border-color: #0f2d5e;
-  background: #ffffff;
-}
-
-.primary-button,
-.secondary-button,
-.whatsapp-button {
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border: 0;
-  border-radius: 14px;
-  padding: 0.75rem 1rem;
-  font-weight: 900;
-}
-
-.primary-button {
-  color: #ffffff;
-  background: #0f2d5e;
-}
-
-.secondary-button {
-  color: #0f2d5e;
-  background: #ffffff;
-  border: 2px solid #a2d2ff;
-}
-
-.whatsapp-button {
-  color: #ffffff;
-  background: #25d366;
 }
 
 .form-error,
@@ -842,10 +733,6 @@ td small {
   margin-bottom: 20px;
 }
 
-/* =========================================
-   SCANNER / CONTROL DE ENTRADA
-   ========================================= */
-
 .scanner-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr);
@@ -861,10 +748,7 @@ td small {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
-.scanner-panel {
-  min-width: 0;
-}
-
+.scanner-panel,
 .history-panel {
   min-width: 0;
 }
@@ -890,10 +774,6 @@ td small {
   color: #6b7280;
   font-size: 14px;
 }
-
-/* =========================================
-   CÁMARA
-   ========================================= */
 
 .camera-container {
   width: 100%;
@@ -925,8 +805,6 @@ td small {
   border-radius: 18px;
 }
 
-/* Ocultar controles internos de html5-qrcode
-   porque nosotros manejamos la interfaz */
 #qr-reader__dashboard {
   display: none !important;
 }
@@ -934,10 +812,6 @@ td small {
 #qr-reader__scan_region {
   border: none !important;
 }
-
-/* =========================================
-   MARCO DEL QR
-   ========================================= */
 
 .qr-scanner-overlay {
   position: absolute;
@@ -953,11 +827,8 @@ td small {
   width: 250px;
   height: 250px;
   border-radius: 18px;
-  box-shadow:
-    0 0 0 9999px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.28);
 }
-
-/* Esquinas del marco */
 
 .corner {
   position: absolute;
@@ -995,10 +866,6 @@ td small {
   border-radius: 0 0 14px 0;
 }
 
-/* =========================================
-   VALIDACIÓN MANUAL
-   ========================================= */
-
 .manual-scan {
   display: flex;
   gap: 10px;
@@ -1019,65 +886,37 @@ td small {
   border-color: #6366f1;
 }
 
-.primary-button {
+.primary-button,
+.secondary-button {
   border: none;
   border-radius: 10px;
   padding: 12px 18px;
-  background: #111827;
-  color: #ffffff;
   font-weight: 600;
   cursor: pointer;
+}
+
+.primary-button {
+  background: #111827;
+  color: #ffffff;
 }
 
 .primary-button:hover {
   background: #1f2937;
 }
 
-.primary-button:disabled {
+.primary-button:disabled,
+.secondary-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* =========================================
-   RESULTADO
-   ========================================= */
-
-.scan-result {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 14px;
-  text-align: center;
+.secondary-button {
+  color: #111827;
+  background: #e5e7eb;
 }
 
-.scan-result strong {
-  font-size: 18px;
-}
-
-.scan-result span {
-  font-size: 14px;
-}
-
-.scan-result.acceso_permitido {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
-}
-
-.scan-result.pase_ya_utilizado {
-  background: #fffbeb;
-  color: #b45309;
-  border: 1px solid #fde68a;
-}
-
-.scan-result.qr_no_valido {
-  background: #fef2f2;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
+.secondary-button:hover {
+  background: #d1d5db;
 }
 
 .scan-result {
@@ -1143,6 +982,16 @@ td small {
   color: #dc2626;
 }
 
+.scan-result.acceso_insuficiente {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.scan-result.acceso_insuficiente svg {
+  color: #d97706;
+}
+
 .history-item {
   display: grid;
   gap: 0.25rem;
@@ -1170,9 +1019,11 @@ td small {
   border-color: #fecaca;
   background: #fef2f2;
 }
-/* =========================================
-   HISTORIAL
-   ========================================= */
+
+.history-item.acceso_insuficiente {
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
 
 .history-panel h2 {
   margin-top: 0;
@@ -1216,15 +1067,108 @@ td small {
   border-left: 4px solid #ef4444;
 }
 
+.history-item.acceso_insuficiente {
+  border-left: 4px solid #f59e0b;
+}
+
 .muted {
   color: #6b7280;
   font-size: 14px;
   text-align: center;
 }
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
+.scan-access-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.scan-access-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.scan-access-modal-content {
+  position: relative;
+  width: min(460px, 100%);
+  padding: 1.5rem;
+  border: 2px solid rgba(212, 175, 55, 0.75);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.3);
+}
+
+.scan-access-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #0f2d5e;
+}
+
+.scan-access-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.scan-access-modal-header p {
+  margin: 0.2rem 0 0;
+  color: #64748b;
+  font-weight: 800;
+}
+
+.scan-access-question {
+  margin: 1.25rem 0 0.75rem;
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.scan-access-available {
+  margin-bottom: 0.7rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.scan-access-available strong {
+  color: #0f2d5e;
+}
+
+.scan-access-input {
+  width: 100%;
+  min-height: 58px;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  color: #0f172a;
+  background: #ffffff;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 900;
+  outline: none;
+}
+
+.scan-access-input:focus {
+  border-color: #0f2d5e;
+}
+
+.scan-access-error {
+  margin: 0.6rem 0 0;
+  color: #b91c1c !important;
+  font-size: 0.85rem !important;
+  font-weight: 800;
+}
+
+.scan-access-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
 
 @media (max-width: 900px) {
   .scanner-grid {
@@ -1242,7 +1186,8 @@ td small {
     flex-direction: column;
   }
 
-  .primary-button {
+  .primary-button,
+  .secondary-button {
     width: 100%;
   }
 
@@ -1258,5 +1203,13 @@ td small {
 
   #qr-reader video {
     min-height: 280px;
+  }
+
+  .scan-access-modal-content {
+    padding: 1.2rem;
+  }
+
+  .scan-access-actions {
+    grid-template-columns: 1fr;
   }
 }
