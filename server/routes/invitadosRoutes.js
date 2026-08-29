@@ -5,6 +5,7 @@ import {
   eliminarInvitado,
   listarInvitados,
   obtenerInvitado,
+  consultarQrController,
   validarQrController
 } from '../controllers/invitadosController.js';
 import { requireAuth } from '../middlewares/authMiddleware.js';
@@ -12,6 +13,7 @@ import { requireRole } from '../middlewares/roleMiddleware.js';
 
 export const invitadosRoutes = Router();
 
+invitadosRoutes.post('/consultar-qr', requireAuth, requireRole('ADMIN', 'ACCESO'), consultarQrController);
 invitadosRoutes.post('/validar-qr', requireAuth, requireRole('ADMIN', 'ACCESO'), validarQrController);
 invitadosRoutes.get('/', requireAuth, requireRole('ADMIN'), listarInvitados);
 invitadosRoutes.post('/', requireAuth, requireRole('ADMIN'), crearInvitado);
