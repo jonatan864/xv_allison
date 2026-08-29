@@ -80,13 +80,13 @@ export function useInvitados(enabled = true) {
 
   const stats = useMemo(() => {
     const totalPases = invitados.reduce((sum, item) => sum + item.pases, 0);
-    const usados = invitados.filter((item) => item.estado === 'USADO').length;
+    const caducados = invitados.filter((item) => item.estado === 'CADUCADO').length;
     const vigentes = invitados.filter((item) => item.estado === 'VIGENTE').length;
 
     return {
       invitados: invitados.length,
       totalPases,
-      usados,
+      caducados,
       vigentes
     };
   }, [invitados]);

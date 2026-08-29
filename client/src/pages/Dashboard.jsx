@@ -18,7 +18,7 @@ export function Dashboard({ stats, loading, error }) {
         <StatCard label="QR Generados" value={loading ? '...' : stats.invitados} />
         <StatCard label="Invitados" value={loading ? '...' : stats.totalPases} tone="gold" />
         <StatCard label="Vigentes" value={loading ? '...' : stats.vigentes} tone="green" />
-        <StatCard label="Usados" value={loading ? '...' : stats.usados} tone="dark" />
+        <StatCard label="Caducados" value={loading ? '...' : stats.caducados} tone="dark" />
       </div>
     </div>
   );
