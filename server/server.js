@@ -18,7 +18,29 @@ assertProductionEnv();
 const app = express();
 const server = http.createServer(app);
 
-const isAllowedOrigin = (origin) => !origin || env.corsOrigins.includes(origin);
+// En desarrollo permitimos clientes de la red local (LAN). En producción
+// se mantienen únicamente los orígenes definidos explícitamente en .env.
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (env.corsOrigins.includes(origin)) return true;
+
+  if (env.nodeEnv === 'development') {
+    try {
+      const url = new URL(origin);
+      const isLocalhost = ['localhost', '127.0.0.1'].includes(url.hostname);
+      const isPrivateIpv4 =
+        /^10\\.(?:\\d{1,3}\\.){2}\\d{1,3}$/.test(url.hostname) ||
+        /^192\\.168\\.(?:\\d{1,3})\\.\\d{1,3}$/.test(url.hostname) ||
+        /^172\\.(?:1[6-9]|2\\d|3[0-1])\\.(?:\\d{1,3})\\.\\d{1,3}$/.test(url.hostname);
+
+      return isLocalhost || isPrivateIpv4;
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+};
 
 const corsOptions = {
   origin: (origin, callback) => {
