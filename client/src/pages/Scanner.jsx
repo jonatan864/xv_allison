@@ -11,12 +11,16 @@ import React, {
 } from 'react';
 
 import { QRScanner } from '../components/QRScanner.jsx';
-import { validarQr } from '../services/invitadosService.js';
+import {
+  consultarQr,
+  validarQr
+} from '../services/invitadosService.js';
 
 const resultIcons = {
   ACCESO_PERMITIDO: CheckCircle2,
   QR_CADUCADO: ShieldAlert,
-  QR_NO_VALIDO: XCircle
+  QR_NO_VALIDO: XCircle,
+  ACCESO_INSUFICIENTE: ShieldAlert
 };
 
 function buildErrorResult(err) {
@@ -35,35 +39,48 @@ export function Scanner() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  const [pendingQr, setPendingQr] = useState(null);
+  const [cantidad, setCantidad] = useState(1);
+  const [cantidadError, setCantidadError] = useState('');
+
+  const addHistory = (response) => {
+    setHistory((current) => [
+      response,
+      ...current
+    ].slice(0, 20));
+  };
 
   const processQr = async (token) => {
-    if (!token?.trim() || loading) {
+    if (!token?.trim() || loading || pendingQr) {
       return;
     }
 
     setLoading(true);
     setResult(null);
+    setCantidadError('');
 
     try {
-      const response = await validarQr(token.trim());
+      // Primero consultamos el QR sin consumir ningún acceso.
+      // Esto permite preguntar cuántas personas llegaron juntas.
+      const response = await consultarQr(token.trim());
 
-      setResult(response);
+      if (response.resultado !== 'QR_DISPONIBLE') {
+        setResult(response);
+        addHistory(response);
+        setQrToken('');
+        return;
+      }
 
-      setHistory((current) => [
-        response,
-        ...current
-      ].slice(0, 20));
-
+      setPendingQr({
+        token: token.trim(),
+        response
+      });
+      setCantidad(1);
       setQrToken('');
     } catch (err) {
       const errorResult = buildErrorResult(err);
-
       setResult(errorResult);
-
-      setHistory((current) => [
-        errorResult,
-        ...current
-      ].slice(0, 20));
+      addHistory(errorResult);
     } finally {
       setLoading(false);
     }
@@ -71,7 +88,6 @@ export function Scanner() {
 
   const handleValidate = async (event) => {
     event.preventDefault();
-
     await processQr(qrToken);
   };
 
@@ -79,8 +95,56 @@ export function Scanner() {
     async (decodedText) => {
       await processQr(decodedText);
     },
-    [loading]
+    [loading, pendingQr]
   );
+
+  const handleConfirmAccesses = async () => {
+    if (!pendingQr || loading) {
+      return;
+    }
+
+    const max = Number(pendingQr.response.accesosRestantes || 0);
+    const value = Number(cantidad);
+
+    if (!Number.isInteger(value) || value < 1) {
+      setCantidadError('Ingresa un número entero mayor o igual a 1.');
+      return;
+    }
+
+    if (value > max) {
+      setCantidadError(
+        `No puedes quemar ${value} pases. Solo hay ${max} disponibles.`
+      );
+      return;
+    }
+
+    setLoading(true);
+    setCantidadError('');
+
+    try {
+      const response = await validarQr(
+        pendingQr.token,
+        value
+      );
+
+      setResult(response);
+      addHistory(response);
+      setPendingQr(null);
+      setCantidad(1);
+    } catch (err) {
+      const errorResult = buildErrorResult(err);
+      setResult(errorResult);
+      addHistory(errorResult);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelAccesses = () => {
+    setPendingQr(null);
+    setCantidad(1);
+    setCantidadError('');
+  };
 
   const ResultIcon = result
     ? resultIcons[result.resultado] || XCircle
@@ -109,7 +173,7 @@ export function Scanner() {
         <div className="camera-container">
           <QRScanner
             onScan={handleQrScan}
-            disabled={loading}
+            disabled={loading || Boolean(pendingQr)}
           />
         </div>
 
@@ -123,7 +187,7 @@ export function Scanner() {
               setQrToken(event.target.value)
             }
             placeholder="Pega qrToken ej: XV-8f72c91a4..."
-            disabled={loading}
+            disabled={loading || Boolean(pendingQr)}
           />
 
           <button
@@ -131,6 +195,7 @@ export function Scanner() {
             type="submit"
             disabled={
               loading ||
+              Boolean(pendingQr) ||
               !qrToken.trim()
             }
           >
@@ -168,8 +233,12 @@ export function Scanner() {
 
               {isSuccess && (
                 <span className="scan-progress">
-                  Acceso {result.accesosUsados} de{' '}
+                  Acceso{result.cantidadAccesos > 1 ? 's' : ''}{' '}
+                  {result.accesosUsados} de{' '}
                   {result.pases}
+                  {result.cantidadAccesos > 1 && (
+                    <> · Se quemaron {result.cantidadAccesos}</>
+                  )}
                 </span>
               )}
 
@@ -181,8 +250,7 @@ export function Scanner() {
                 </span>
               )}
 
-              {result.resultado ===
-                'QR_NO_VALIDO' &&
+              {result.resultado === 'QR_NO_VALIDO' &&
                 result.invitado && (
                   <span className="scan-progress">
                     Accesos utilizados:{' '}
@@ -216,16 +284,16 @@ export function Scanner() {
                   'Sin invitado'}
               </span>
 
-              {item.resultado ===
-                'ACCESO_PERMITIDO' && (
+              {item.resultado === 'ACCESO_PERMITIDO' && (
                 <small>
-                  Acceso {item.accesosUsados}{' '}
-                  de {item.pases}
+                  Acceso{item.cantidadAccesos > 1 ? 's' : ''}{' '}
+                  {item.accesosUsados} de {item.pases}
+                  {item.cantidadAccesos > 1 &&
+                    ` · ${item.cantidadAccesos} quemados`}
                 </small>
               )}
 
-              {item.resultado ===
-                'QR_CADUCADO' && (
+              {item.resultado === 'QR_CADUCADO' && (
                 <small>
                   {item.accesosUsados} de{' '}
                   {item.pases} accesos utilizados
@@ -241,6 +309,77 @@ export function Scanner() {
           )}
         </div>
       </section>
+
+      {pendingQr && (
+        <div className="scan-access-modal" role="dialog" aria-modal="true">
+          <div className="scan-access-modal-backdrop" />
+
+          <div className="scan-access-modal-content">
+            <div className="scan-access-modal-header">
+              <CheckCircle2 size={28} />
+              <div>
+                <h3>Invitado encontrado</h3>
+                <p>{pendingQr.response.invitado?.nombre}</p>
+              </div>
+            </div>
+
+            <p className="scan-access-question">
+              ¿Cuántos pases/accesos deseas quemar para este invitado?
+            </p>
+
+            <div className="scan-access-available">
+              Pases disponibles: <strong>{pendingQr.response.accesosRestantes}</strong>
+            </div>
+
+            <input
+              className="scan-access-input"
+              type="number"
+              min="1"
+              max={pendingQr.response.accesosRestantes}
+              step="1"
+              value={cantidad}
+              onChange={(event) => {
+                setCantidad(event.target.value);
+                setCantidadError('');
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleConfirmAccesses();
+                }
+              }}
+              autoFocus
+              disabled={loading}
+            />
+
+            {cantidadError && (
+              <p className="scan-access-error">
+                {cantidadError}
+              </p>
+            )}
+
+            <div className="scan-access-actions">
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={handleCancelAccesses}
+                disabled={loading}
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                className="primary-button"
+                onClick={handleConfirmAccesses}
+                disabled={loading}
+              >
+                {loading ? 'Procesando...' : 'Quemar accesos'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
