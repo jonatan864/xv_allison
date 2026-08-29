@@ -1,5 +1,5 @@
 import { Invitado } from '../models/Invitado.js';
-import { createInvitado, updateInvitado, validarQr } from '../services/invitadosService.js';
+import { createInvitado, updateInvitado, consultarQr, validarQr } from '../services/invitadosService.js';
 import { emitEvent } from '../services/socketService.js';
 
 export async function crearInvitado(req, res, next) {
@@ -60,9 +60,21 @@ export async function eliminarInvitado(req, res, next) {
   }
 }
 
+export async function consultarQrController(req, res, next) {
+  try {
+    const result = await consultarQr(req.body.qrToken);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function validarQrController(req, res, next) {
   try {
-    const result = await validarQr(req.body.qrToken);
+    const result = await validarQr(
+      req.body.qrToken,
+      req.body.cantidad ?? 1
+    );
 
     if (result.resultado === 'ACCESO_PERMITIDO') {
       emitEvent('invitado_validado', result.invitado);
