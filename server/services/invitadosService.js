@@ -98,12 +98,10 @@ export async function updateInvitado(id, payload) {
 }
 
 /**
- * Valida un QR y consume exactamente un acceso.
- *
- * La operación que incrementa accesosUsados se realiza
- * de forma atómica en MongoDB.
+ * Consulta un QR sin consumir accesos.
+ * Se utiliza antes de mostrar el selector de cantidad.
  */
-export async function validarQr(qrToken) {
+export async function consultarQr(qrToken) {
   const token = String(qrToken || '').trim();
 
   if (!token) {
@@ -112,40 +110,117 @@ export async function validarQr(qrToken) {
     throw error;
   }
 
+  const existing = await Invitado.findOne({ qrToken: token });
+
+  if (!existing) {
+    return {
+      resultado: 'QR_NO_VALIDO',
+      mensaje: 'QR NO VALIDO',
+      accesosUsados: 0,
+      pases: 0,
+      accesosRestantes: 0,
+      invitado: null
+    };
+  }
+
+  const accesosUsados = Number(existing.accesosUsados || 0);
+  const pases = Number(existing.pases || 0);
+  const accesosRestantes = Math.max(pases - accesosUsados, 0);
+
+  if (existing.estado === 'CANCELADO') {
+    return {
+      resultado: 'QR_NO_VALIDO',
+      mensaje: 'QR CANCELADO',
+      accesosUsados,
+      pases,
+      accesosRestantes,
+      invitado: existing
+    };
+  }
+
+  if (
+    existing.estado === 'CADUCADO' ||
+    accesosUsados >= pases
+  ) {
+    return {
+      resultado: 'QR_CADUCADO',
+      mensaje: 'QR CADUCADO',
+      accesosUsados,
+      pases,
+      accesosRestantes: 0,
+      invitado: existing
+    };
+  }
+
+  return {
+    resultado: 'QR_DISPONIBLE',
+    mensaje: 'QR DISPONIBLE',
+    accesosUsados,
+    pases,
+    accesosRestantes,
+    invitado: existing
+  };
+}
+
+/**
+ * Valida un QR y consume accesos.
+ *
+ * cantidad es opcional para conservar el comportamiento anterior:
+ * validarQr(qrToken) sigue consumiendo exactamente 1 acceso.
+ *
+ * La operación que incrementa accesosUsados se realiza
+ * de forma atómica en MongoDB y solo permite consumir la cantidad
+ * solicitada si todos esos accesos siguen disponibles.
+ */
+export async function validarQr(qrToken, cantidad = 1) {
+  const token = String(qrToken || '').trim();
+  const cantidadAccesos = Number(cantidad);
+
+  if (!token) {
+    const error = new Error('qrToken es obligatorio');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (
+    !Number.isInteger(cantidadAccesos) ||
+    cantidadAccesos < 1 ||
+    cantidadAccesos > 20
+  ) {
+    const error = new Error('La cantidad de accesos debe ser un entero entre 1 y 20');
+    error.statusCode = 400;
+    throw error;
+  }
+
   const fechaEntrada = new Date();
 
   /*
-   * IMPORTANTE:
-   *
    * Solo encontramos el documento si:
-   *
    * 1. El QR existe.
    * 2. Está VIGENTE.
-   * 3. accesosUsados < pases.
+   * 3. Hay suficientes accesos para consumir la cantidad solicitada.
    *
-   * Entonces incrementamos accesosUsados de forma atómica.
-   *
-   * También calculamos el nuevo estado:
-   *
-   * accesosUsados + 1 >= pases
-   *      -> CADUCADO
-   *
-   * en caso contrario:
-   *      -> VIGENTE
+   * El incremento es atómico para evitar que dos dispositivos consuman
+   * simultáneamente más pases de los disponibles.
    */
   const updated = await Invitado.findOneAndUpdate(
     {
       qrToken: token,
       estado: 'VIGENTE',
       $expr: {
-        $lt: ['$accesosUsados', '$pases']
+        $lte: [
+          {
+            $add: ['$accesosUsados', cantidadAccesos]
+          },
+          '$pases'
+        ]
       }
     },
     [
       {
         $set: {
           accesosUsados: {
-            $add: ['$accesosUsados', 1]
+            $add: ['$accesosUsados', cantidadAccesos]
           },
 
           fechaEntrada,
@@ -155,7 +230,7 @@ export async function validarQr(qrToken) {
               {
                 $gte: [
                   {
-                    $add: ['$accesosUsados', 1]
+                    $add: ['$accesosUsados', cantidadAccesos]
                   },
                   '$pases'
                 ]
@@ -172,9 +247,6 @@ export async function validarQr(qrToken) {
     }
   );
 
-  /*
-   * Si updated existe, el acceso fue consumido correctamente.
-   */
   if (updated) {
     const accesosUsados = updated.accesosUsados;
     const pases = updated.pases;
@@ -185,7 +257,10 @@ export async function validarQr(qrToken) {
 
     return {
       resultado: 'ACCESO_PERMITIDO',
-      mensaje: 'ACCESO PERMITIDO',
+      mensaje: cantidadAccesos === 1
+        ? 'ACCESO PERMITIDO'
+        : `${cantidadAccesos} ACCESOS PERMITIDOS`,
+      cantidadAccesos,
       accesosUsados,
       pases,
       accesosRestantes,
@@ -193,20 +268,15 @@ export async function validarQr(qrToken) {
     };
   }
 
-  /*
-   * Si no se actualizó, averiguamos por qué.
-   */
   const existing = await Invitado.findOne({
     qrToken: token
   });
 
-  /*
-   * QR inexistente.
-   */
   if (!existing) {
     return {
       resultado: 'QR_NO_VALIDO',
       mensaje: 'QR NO VALIDO',
+      cantidadAccesos,
       accesosUsados: 0,
       pases: 0,
       accesosRestantes: 0,
@@ -225,13 +295,11 @@ export async function validarQr(qrToken) {
     0
   );
 
-  /*
-   * QR cancelado.
-   */
   if (existing.estado === 'CANCELADO') {
     return {
       resultado: 'QR_NO_VALIDO',
       mensaje: 'QR CANCELADO',
+      cantidadAccesos,
       accesosUsados,
       pases,
       accesosRestantes,
@@ -239,9 +307,6 @@ export async function validarQr(qrToken) {
     };
   }
 
-  /*
-   * QR caducado porque ya consumió todos los accesos.
-   */
   if (
     existing.estado === 'CADUCADO' ||
     accesosUsados >= pases
@@ -249,6 +314,7 @@ export async function validarQr(qrToken) {
     return {
       resultado: 'QR_CADUCADO',
       mensaje: 'QR CADUCADO',
+      cantidadAccesos,
       accesosUsados,
       pases,
       accesosRestantes: 0,
@@ -256,12 +322,11 @@ export async function validarQr(qrToken) {
     };
   }
 
-  /*
-   * Cualquier otro caso inesperado.
-   */
+  // El QR sigue vigente, pero no hay suficientes pases para la cantidad solicitada.
   return {
-    resultado: 'QR_NO_VALIDO',
-    mensaje: 'QR NO VALIDO',
+    resultado: 'ACCESO_INSUFICIENTE',
+    mensaje: `Solo hay ${accesosRestantes} ${accesosRestantes === 1 ? 'acceso disponible' : 'accesos disponibles'}`,
+    cantidadAccesos,
     accesosUsados,
     pases,
     accesosRestantes,
