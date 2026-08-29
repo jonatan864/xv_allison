@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { getAuthToken } from './api.js';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:4000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || `${window.location.protocol}//${window.location.hostname}:4000`;
 
 let socket = null;
 
