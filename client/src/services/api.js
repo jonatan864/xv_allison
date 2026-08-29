@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://192.168.1.81:4000/api';
 
 let authToken = sessionStorage.getItem('xv_auth_token') || '';
 
