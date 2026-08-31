@@ -1,4 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:4000/api`;
+const LOCAL_API_URL = `${window.location.protocol}//${window.location.hostname}:4000/api`;
+const PRODUCTION_API_URL = 'https://xv-allison.onrender.com/api';
+
+// Vite inyecta VITE_API_URL durante el build. Si no existe, producción usa
+// directamente la API pública de Render y desarrollo conserva la API local.
+const API_URL = import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? PRODUCTION_API_URL : LOCAL_API_URL);
 
 let authToken = sessionStorage.getItem('xv_auth_token') || '';
 
