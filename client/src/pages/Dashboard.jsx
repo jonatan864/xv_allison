@@ -6,8 +6,7 @@ export function Dashboard({ stats, loading, error }) {
     <div className="page-stack">
       <section className="hero-panel">
         <div>
-          <p className="eyebrow">Panel administrativo</p>
-          <h2>XV Alison</h2>
+          <h1 className="eyebrow">Panel administrativo</h1>
           <p>Registro, tickets y estados conectados a la base de datos central.</p>
         </div>
       </section>

@@ -1,7 +1,7 @@
 export function buildInvitationText(invitado) {
   return [
     `Hola ${invitado.nombre}`,
-    'Te compartimos tu invitacion a los XV anos de Allison.',
+    'Te compartimos tu invitacion a los XV años de Alison.',
     'Presenta este codigo QR en la entrada.',
     `Pases: ${invitado.pases}`,
     'Te esperamos!'

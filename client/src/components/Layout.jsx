@@ -27,7 +27,7 @@ export function Layout({ activePage, setActivePage, usuario, onLogout, children 
             <Sparkles size={22} />
           </div>
           <div className="brand-copy">
-            <p className="eyebrow">XV Allison</p>
+            <p className="eyebrow">XV Alison</p>
             <h1>Control QR</h1>
           </div>
         </div>

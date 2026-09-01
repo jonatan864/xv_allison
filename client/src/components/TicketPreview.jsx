@@ -96,9 +96,9 @@ export function TicketPreview({ invitado }) {
         </div>
 
         <div className="ticket-guest">
-          <span>INVITACION PARA:</span>
+          <span>INVITACIÓN PARA:</span>
           <strong>{invitado.nombre}</strong>
-          <span>VALIDO POR:</span>
+          <span>VÁLIDO POR:</span>
           <b>{invitado.pases} {invitado.pases === 1 ? 'PASE' : 'ACCESOS'}</b>
         </div>
 
